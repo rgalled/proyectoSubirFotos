@@ -12,6 +12,10 @@ class SubirController extends Controller
      */
     public function index()
     {
+        $subir = subir::all();
+        if ($subir->isEmpty()) {
+            return redirect()->route('subir.create');
+        }
         return view('subir.index');
     }
 
@@ -20,7 +24,13 @@ class SubirController extends Controller
      */
     public function create()
     {
-        //
+        return view('subir.create');
+    }
+
+    public function table()
+    {
+        $subir = subir::all();
+        return view('subir.table', compact('subir'));
     }
 
     /**
@@ -28,7 +38,20 @@ class SubirController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'subidos.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación: solo imágenes
+        ]);
+        foreach ($request->file('subidos') as $subir) {
+            $nombreOriginal = $subir->getClientOriginalName();
+            $nombre = date('H_i') . date('d_m_Y') . $nombreOriginal;
+            $ruta = $subir->storeAs('archivos', $nombre, 'private');
+            subir::create([
+                'nombre_original' => $nombreOriginal,
+                'nombre' => $nombre,
+                'ruta' => $ruta,
+            ]);
+        }
+        return back()->with('success', 'files uploaded');
     }
 
     /**
@@ -36,7 +59,8 @@ class SubirController extends Controller
      */
     public function show(subir $subir)
     {
-        return view('subir.show');
+        $ruta = storage_path('app/private/subidos/' . $subir->ruta);
+        return response()->file($ruta);
     }
 
     /**
@@ -44,7 +68,7 @@ class SubirController extends Controller
      */
     public function edit(subir $subir)
     {
-        return view('subir.edit');
+        
     }
 
     /**
@@ -55,11 +79,18 @@ class SubirController extends Controller
         //
     }
 
+    public function img($id)
+    {
+        $subir = subir::findOrFail($id);
+        $ruta = storage_path('app/private/subidos' . $subir->ruta);
+        return response()->file($ruta);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(subir $subir)
     {
-        //
+
     }
 }

@@ -7,9 +7,9 @@
 </head>
 <body>
     <header>
-        <a href="">Home</a>
-        <a href="">Upload</a>
-        <a href="">Images</a>
+        <a href="{{route('subir.index')}}">Home</a>
+        <a href="{{route('subir.create')}}">Upload</a>
+        <a href="{{route('subir.table')}}">Images</a>
     </header>
     <div>
         @yield('content')

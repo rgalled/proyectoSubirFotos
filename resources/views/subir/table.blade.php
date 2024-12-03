@@ -1,4 +1,4 @@
-@extends(base)
+@extends('subir.base')
 
 @section('content')
 <table id="tablasubir">
@@ -13,10 +13,10 @@
         <tbody>
             @foreach($subidos as $subir)
                 <tr>
-                    <td>{{$pokemon->id}}</td>
-                    <td>{{$pokemon->nombre}}</td>
-                    <td>{{$pokemon->extension}} kg</td>
-                    <td>{{$pokemon->timestamps}} m</td>
+                    <td>{{$subir->id}}</td>
+                    <td>{{$subir->nombre}}</td>
+                    <td>{{$subir->extension}}</td>
+                    <td>{{$subir->timestamps}}</td>
                 </tr>
             @endforeach
         </tbody>
